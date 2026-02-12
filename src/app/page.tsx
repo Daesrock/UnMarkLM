@@ -7,10 +7,7 @@ import DropZone from '@/components/DropZone';
 import DemoSection from '@/components/DemoSection';
 import FileResults, { type ProcessedFile } from '@/components/FileResults';
 import { useI18n } from '@/hooks/useI18n';
-import { processImage, getFileType } from '@/lib/image-processor';
-import { processPdf } from '@/lib/pdf-processor';
-import { canvasToBlob } from '@/lib/watermark-remover';
-import JSZip from 'jszip';
+
 
 type AppState = 'idle' | 'processing' | 'done';
 
@@ -41,10 +38,11 @@ export default function HomePage() {
       setFiles([...processedFiles]);
 
       try {
-        const fileType = getFileType(file);
+        const imageProcessor = await import('@/lib/image-processor');
+        const fileType = imageProcessor.getFileType(file);
 
         if (fileType === 'image') {
-          const sfResult = await processImage(file, 'smartfill');
+          const sfResult = await imageProcessor.processImage(file, 'smartfill');
 
           const origCanvas = document.createElement('canvas');
           origCanvas.width = sfResult.original.naturalWidth;
@@ -63,6 +61,7 @@ export default function HomePage() {
             progress: 100,
           };
         } else if (fileType === 'pdf') {
+          const { processPdf } = await import('@/lib/pdf-processor');
           const sfResult = await processPdf(file, 'smartfill', undefined, (p) => {
             processedFiles[i].progress = (p.currentPage / p.totalPages) * 100;
             setFiles([...processedFiles]);
@@ -108,6 +107,7 @@ export default function HomePage() {
       return;
     }
 
+    const JSZip = (await import('jszip')).default;
     const zip = new JSZip();
     files.forEach((file) => {
       const blob = file.smartFillResult;
