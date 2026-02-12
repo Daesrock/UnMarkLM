@@ -11,13 +11,12 @@
 ## Features
 
 - **100% Client-Side** — All processing happens in your browser. No files are uploaded to any server.
-- **Smart Fill** — Reconstructs the watermark area using surrounding pixels (gradient interpolation + patch copying).
-- **Crop** — Removes the bottom strip containing the watermark — clean and predictable.
+- **Automatic Smart Removal** — Reconstructs the watermark area using surrounding pixels (gradient interpolation).
 - **Before/After Preview** — Interactive slider to compare original and cleaned versions before downloading.
 - **Multiple Formats** — Supports PDF slide decks, PNG infographics, and JPG images.
 - **Batch Processing** — Upload multiple files and process them all at once. Download as ZIP.
-- **14 Languages** — English, Spanish, Chinese (Simplified/Traditional), Japanese, German, French, Arabic, Portuguese, Indonesian, Korean, Vietnamese, Russian.
-- **Dark Mode** — Light/dark theme with system preference detection and localStorage persistence.
+- **13 Languages** — English, Spanish, Chinese (Simplified/Traditional), Japanese, German, French, Arabic, Portuguese, Indonesian, Korean, Vietnamese, Russian.
+- **Dark Mode** — Light/dark theme toggle with localStorage persistence.
 - **Mobile Responsive** — Works on smartphones and tablets.
 - **Zero Dependencies for Processing** — Pure Canvas API watermark removal, no heavy WASM or external libraries needed.
 
@@ -65,7 +64,7 @@ src/
 │   ├── Footer.tsx         # Footer with links and disclaimer
 │   ├── DropZone.tsx       # Drag-and-drop file upload
 │   ├── BeforeAfterSlider.tsx  # Interactive before/after comparison
-│   └── FileResults.tsx    # Processing progress, method toggle, download
+│   └── FileResults.tsx    # Processing progress + download
 ├── hooks/
 │   ├── useI18n.tsx        # i18n React Context provider
 │   └── useTheme.tsx       # Theme React Context provider
@@ -88,9 +87,8 @@ src/
 ## How It Works
 
 1. **Watermark Detection** — Uses known NotebookLM watermark positioning (bottom-right corner) based on image dimensions (infographic vs slide deck vs fallback).
-2. **Smart Fill** — Analyzes background complexity. For simple backgrounds, uses bilinear gradient interpolation from the 4 edges of the watermark region. For complex backgrounds, copies a patch from above the watermark region with feathered seam blending.
-3. **Crop** — Simply removes the bottom strip of the image at the watermark's Y position.
-4. **PDF Pipeline** — Renders each page via pdf.js → applies watermark removal → reconstructs PDF with pdf-lib.
+2. **Smart Removal** — Interpolates background from above/below the watermark and selectively replaces only watermark-affected pixels to avoid visible rectangles on gradients.
+3. **PDF Pipeline** — Renders each page via pdf.js (local worker) → applies watermark removal → reconstructs PDF with pdf-lib.
 
 ## Deployment
 
