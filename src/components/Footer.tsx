@@ -24,7 +24,7 @@ export default function Footer() {
             <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">{t('nav.terms')}</Link>
             <Link href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">{t('nav.contact')}</Link>
             <a
-              href="https://github.com/UnMarkLM/UnMarkLM"
+              href="https://github.com/Daesrock/UnMarkLM"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-1"

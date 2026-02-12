@@ -8,6 +8,7 @@ import { useI18n } from '@/hooks/useI18n';
 export default function ContactPage() {
   const { t, ready } = useI18n();
   const [sent, setSent] = useState(false);
+  const contactEmail = 'daesrock.3707@gmail.com';
 
   if (!ready) {
     return (
@@ -17,10 +18,21 @@ export default function ContactPage() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Since this is a static site, we just show a success message
-    // In production, this could be wired to a mailto: link or external form service
+
+    const form = new FormData(e.currentTarget);
+    const name = String(form.get('name') || '').trim();
+    const email = String(form.get('email') || '').trim();
+    const subject = String(form.get('subject') || '').trim();
+    const message = String(form.get('message') || '').trim();
+
+    const fullSubject = encodeURIComponent(subject || 'UnMarkLM Contact');
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    );
+
+    window.location.href = `mailto:${contactEmail}?subject=${fullSubject}&body=${body}`;
     setSent(true);
   };
 
@@ -51,6 +63,7 @@ export default function ContactPage() {
               </label>
               <input
                 type="text"
+                name="name"
                 required
                 placeholder={t('contact.name.placeholder')}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
@@ -62,6 +75,7 @@ export default function ContactPage() {
               </label>
               <input
                 type="email"
+                name="email"
                 required
                 placeholder={t('contact.email.placeholder')}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
@@ -73,6 +87,7 @@ export default function ContactPage() {
               </label>
               <input
                 type="text"
+                name="subject"
                 required
                 placeholder={t('contact.subject.placeholder')}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
@@ -83,6 +98,7 @@ export default function ContactPage() {
                 {t('contact.message')}
               </label>
               <textarea
+                name="message"
                 required
                 rows={5}
                 placeholder={t('contact.message.placeholder')}
@@ -102,7 +118,10 @@ export default function ContactPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {t('contact.info')}
           </p>
-          <a href="https://github.com/UnMarkLM/UnMarkLM/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm mt-1 inline-block">
+          <a href={`mailto:${contactEmail}`} className="text-blue-600 dark:text-blue-400 hover:underline text-sm mt-1 inline-block mr-4">
+            {contactEmail}
+          </a>
+          <a href="https://github.com/Daesrock/UnMarkLM/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm mt-1 inline-block">
             GitHub Issues
           </a>
         </div>
