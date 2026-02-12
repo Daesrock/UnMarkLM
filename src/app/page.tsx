@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DropZone from '@/components/DropZone';
-import DemoSection from '@/components/DemoSection';
-import FileResults, { type ProcessedFile } from '@/components/FileResults';
+import { type ProcessedFile } from '@/components/FileResults';
 import { useI18n } from '@/hooks/useI18n';
+
+const DemoSection = dynamic(() => import('@/components/DemoSection'));
+const FileResults = dynamic(() => import('@/components/FileResults'));
 
 
 type AppState = 'idle' | 'processing' | 'done';

@@ -22,10 +22,36 @@ export default function BeforeAfterSlider({ before, after, beforeLabel, afterLab
   const labelBefore = beforeLabel || t('preview.before');
   const labelAfter = afterLabel || t('preview.after');
 
-  // Convert canvases to data URLs for display
+  // Convert canvases to object URLs for display (async, avoids blocking toDataURL)
   useEffect(() => {
-    setBeforeUrl(before.toDataURL());
-    setAfterUrl(after.toDataURL());
+    let cancelled = false;
+    let beforeObjectUrl = '';
+    let afterObjectUrl = '';
+
+    const toObjectUrl = async (canvas: HTMLCanvasElement): Promise<string> => {
+      const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) return '';
+      return URL.createObjectURL(blob);
+    };
+
+    (async () => {
+      const [bUrl, aUrl] = await Promise.all([toObjectUrl(before), toObjectUrl(after)]);
+      if (cancelled) {
+        if (bUrl) URL.revokeObjectURL(bUrl);
+        if (aUrl) URL.revokeObjectURL(aUrl);
+        return;
+      }
+      beforeObjectUrl = bUrl;
+      afterObjectUrl = aUrl;
+      setBeforeUrl(bUrl);
+      setAfterUrl(aUrl);
+    })();
+
+    return () => {
+      cancelled = true;
+      if (beforeObjectUrl) URL.revokeObjectURL(beforeObjectUrl);
+      if (afterObjectUrl) URL.revokeObjectURL(afterObjectUrl);
+    };
   }, [before, after]);
 
   const updatePosition = useCallback((clientX: number) => {
