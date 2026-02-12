@@ -7,12 +7,10 @@ import { useI18n } from '@/hooks/useI18n';
 
 export default function FAQPage() {
   const { t, ready } = useI18n();
-  const [openIndexes, setOpenIndexes] = useState<number[]>([]);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleOpen = (index: number) => {
-    setOpenIndexes((prev) => (prev.includes(index)
-      ? prev.filter((item) => item !== index)
-      : [...prev, index]));
+    setOpenIndex((prev) => (prev === index ? null : index));
   };
 
   if (!ready) {
@@ -48,14 +46,14 @@ export default function FAQPage() {
                 type="button"
                 onClick={() => toggleOpen(idx)}
                 className="w-full min-w-0 flex items-center justify-between cursor-pointer px-6 py-4 text-gray-900 dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800/50 transition-colors"
-                aria-expanded={openIndexes.includes(idx)}
+                aria-expanded={openIndex === idx}
               >
                 <span className="min-w-0 break-words pr-2 text-left">{faq.q}</span>
-                <svg className={`w-5 h-5 text-gray-400 transition-transform flex-shrink-0 ml-4 ${openIndexes.includes(idx) ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <svg className={`w-5 h-5 text-gray-400 transition-transform flex-shrink-0 ml-4 ${openIndex === idx ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
-              <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${openIndexes.includes(idx) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+              <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${openIndex === idx ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                 <div className="overflow-hidden min-w-0">
                   <div className="px-6 pb-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed break-words [overflow-wrap:anywhere]">
                     {faq.a}
