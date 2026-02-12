@@ -12,6 +12,14 @@
 
 # testing
 /coverage
+/test-output/
+
+# local test/debug artifacts
+test_*.png
+test_*.jpg
+test_*.jpeg
+*.tmp
+*.temp
 
 # next.js
 /.next/
@@ -35,6 +43,10 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# editor / IDE
+.vscode/
+.idea/
 
 # typescript
 *.tsbuildinfo

@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UnMarkLM
+
+**Remove NotebookLM watermarks from infographics, slide decks, and PDFs.**
+
+100% free. 100% private. Your files never leave your device.
+
+🌐 **[UnMarkLM.com](https://unmarklm.com)**
+
+---
+
+## Features
+
+- **100% Client-Side** — All processing happens in your browser. No files are uploaded to any server.
+- **Smart Fill** — Reconstructs the watermark area using surrounding pixels (gradient interpolation + patch copying).
+- **Crop** — Removes the bottom strip containing the watermark — clean and predictable.
+- **Before/After Preview** — Interactive slider to compare original and cleaned versions before downloading.
+- **Multiple Formats** — Supports PDF slide decks, PNG infographics, and JPG images.
+- **Batch Processing** — Upload multiple files and process them all at once. Download as ZIP.
+- **14 Languages** — English, Spanish, Chinese (Simplified/Traditional), Japanese, German, French, Arabic, Portuguese, Indonesian, Korean, Vietnamese, Russian.
+- **Dark Mode** — Light/dark theme with system preference detection and localStorage persistence.
+- **Mobile Responsive** — Works on smartphones and tablets.
+- **Zero Dependencies for Processing** — Pure Canvas API watermark removal, no heavy WASM or external libraries needed.
+
+## Tech Stack
+
+- **Next.js 16** (App Router) with static export
+- **React 19** + **TypeScript**
+- **Tailwind CSS v4**
+- **pdfjs-dist** — PDF rendering
+- **pdf-lib** — PDF reconstruction
+- **JSZip** — ZIP file generation for batch downloads
+- **Vitest** — Tests
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/                   # Next.js App Router pages
+│   ├── layout.tsx         # Root layout with providers
+│   ├── page.tsx           # Main page (drop zone, preview, download)
+│   ├── providers.tsx      # Theme + i18n context providers
+│   ├── globals.css        # Tailwind + dark mode config
+│   ├── faq/page.tsx       # FAQ page
+│   ├── privacy/page.tsx   # Privacy Policy page
+│   ├── terms/page.tsx     # Terms of Service page
+│   └── contact/page.tsx   # Contact page
+├── components/
+│   ├── Header.tsx         # Sticky header with nav, language selector, theme toggle
+│   ├── Footer.tsx         # Footer with links and disclaimer
+│   ├── DropZone.tsx       # Drag-and-drop file upload
+│   ├── BeforeAfterSlider.tsx  # Interactive before/after comparison
+│   └── FileResults.tsx    # Processing progress, method toggle, download
+├── hooks/
+│   ├── useI18n.tsx        # i18n React Context provider
+│   └── useTheme.tsx       # Theme React Context provider
+├── lib/
+│   ├── i18n.ts            # i18n system (locale detection, loading, interpolation)
+│   ├── watermark-remover.ts   # Core engine (detect, smartFill, crop)
+│   ├── pdf-processor.ts   # PDF rendering + rebuilding
+│   └── image-processor.ts # PNG/JPG processing wrapper
+├── locales/               # 13 translation files (JSON)
+│   ├── en.json, es.json, zh-CN.json, zh-TW.json, ja.json,
+│   ├── de.json, fr.json, ar.json, pt.json, id.json,
+│   ├── ko.json, vi.json, ru.json
+└── __tests__/             # Vitest tests
+    ├── setup.ts
+    ├── i18n.test.ts
+    ├── watermark-remover.test.ts
+    └── image-processor.test.ts
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How It Works
 
-## Learn More
+1. **Watermark Detection** — Uses known NotebookLM watermark positioning (bottom-right corner) based on image dimensions (infographic vs slide deck vs fallback).
+2. **Smart Fill** — Analyzes background complexity. For simple backgrounds, uses bilinear gradient interpolation from the 4 edges of the watermark region. For complex backgrounds, copies a patch from above the watermark region with feathered seam blending.
+3. **Crop** — Simply removes the bottom strip of the image at the watermark's Y position.
+4. **PDF Pipeline** — Renders each page via pdf.js → applies watermark removal → reconstructs PDF with pdf-lib.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project is configured for static export (`output: 'export'`), making it deployable to:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Vercel** (recommended)
+- Netlify
+- GitHub Pages
+- Any static hosting
 
-## Deploy on Vercel
+```bash
+npm run build
+# Output in `out/` directory
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Disclaimer
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**UnMarkLM is not affiliated with, endorsed by, or associated with Google LLC or NotebookLM.**
+
+Users are responsible for ensuring their use complies with applicable terms of service and laws.
+
+## License
+
+MIT — see [LICENSE](LICENSE)
