@@ -32,7 +32,7 @@ export default function TermsPage() {
           {t('terms.title')}
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-10">
-          {t('terms.lastUpdated', { date: '2025-01-01' })}
+          {t('terms.lastUpdated', { date: '2026-02-11' })}
         </p>
 
         <div className="space-y-8">

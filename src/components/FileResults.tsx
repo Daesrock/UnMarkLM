@@ -168,7 +168,7 @@ function StatusBadge({ status }: { status: string }) {
     case 'processing':
       return (
         <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-2 py-1 rounded-full">
-          <div className="animate-spin w-3 h-3 border-1.5 border-blue-200 border-t-blue-600 rounded-full" />
+          <div className="animate-spin w-3 h-3 border-2 border-blue-200 border-t-blue-600 rounded-full" />
           Processing
         </span>
       );

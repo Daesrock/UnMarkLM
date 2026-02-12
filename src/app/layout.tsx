@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "UnMarkLM — Remove NotebookLM Watermarks",
   description:
     "Free online tool to remove NotebookLM watermarks from infographics, slide decks, and PDFs. 100% client-side, no uploads.",
+  icons: {
+    icon: "/icon.svg",
+  },
   keywords: [
     "NotebookLM",
     "watermark remover",

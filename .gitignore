@@ -13,6 +13,7 @@
 # testing
 /coverage
 /test-output/
+/examples/
 
 # local test/debug artifacts
 test_*.png
