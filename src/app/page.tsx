@@ -148,6 +148,9 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
             {t('hero.title')}
           </h1>
+          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            {t('hero.kicker')}
+          </p>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t('hero.subtitle')}
           </p>

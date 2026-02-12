@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { Locale, detectLocale, saveLocale, loadTranslations, interpolate, isRTL, type TranslationDict } from '@/lib/i18n';
+import enTranslations from '@/locales/en.json';
 
 interface I18nContextType {
   locale: Locale;
@@ -21,8 +22,8 @@ const I18nContext = createContext<I18nContextType>({
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');
-  const [translations, setTranslations] = useState<TranslationDict>({});
-  const [ready, setReady] = useState(false);
+  const [translations, setTranslations] = useState<TranslationDict>(enTranslations as TranslationDict);
+  const [ready, setReady] = useState(true);
 
   useEffect(() => {
     const detected = detectLocale();
@@ -40,7 +41,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const t = useCallback((key: string, vars?: Record<string, string | number>) => {
-    const text = translations[key] || key;
+    const text = translations[key] || (enTranslations as TranslationDict)[key] || key;
     return interpolate(text, vars);
   }, [translations]);
 
