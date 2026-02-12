@@ -6,6 +6,7 @@ import { removeWatermark } from '@/lib/watermark-remover';
 import { useI18n } from '@/hooks/useI18n';
 
 const DEMO_IMAGE = '/demo/demo-1.png';
+const DEMO_ASPECT_RATIO = 1536 / 500;
 
 export default function DemoSection() {
   const { t } = useI18n();
@@ -15,19 +16,34 @@ export default function DemoSection() {
   useEffect(() => {
     let cancelled = false;
 
+    const runWhenIdle = (fn: () => void) => {
+      const g = globalThis as typeof globalThis & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      };
+      if (typeof g.requestIdleCallback === 'function') {
+        g.requestIdleCallback(fn, { timeout: 1500 });
+        return;
+      }
+      setTimeout(fn, 0);
+    };
+
     const img = new Image();
     img.onload = () => {
       if (cancelled) return;
 
+      // Draw the "before" canvas quickly, then defer the heavier watermark
+      // removal work so we don't block initial rendering / inflate TBT.
       const before = document.createElement('canvas');
       before.width = img.naturalWidth;
       before.height = img.naturalHeight;
       before.getContext('2d')!.drawImage(img, 0, 0);
-
-      const result = removeWatermark(img, 'smartfill');
-
       setBeforeCanvas(before);
-      setAfterCanvas(result.canvas);
+
+      runWhenIdle(() => {
+        if (cancelled) return;
+        const result = removeWatermark(img, 'smartfill');
+        setAfterCanvas(result.canvas);
+      });
     };
     img.src = DEMO_IMAGE;
 
@@ -35,10 +51,6 @@ export default function DemoSection() {
       cancelled = true;
     };
   }, []);
-
-  if (!beforeCanvas || !afterCanvas) {
-    return null;
-  }
 
   return (
     <section className="max-w-5xl mx-auto px-4 py-16">
@@ -48,12 +60,20 @@ export default function DemoSection() {
       <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
         {t('demo.subtitle')}
       </p>
-      <BeforeAfterSlider
-        before={beforeCanvas}
-        after={afterCanvas}
-        beforeLabel={t('preview.before')}
-        afterLabel={t('preview.after')}
-      />
+      {beforeCanvas && afterCanvas ? (
+        <BeforeAfterSlider
+          before={beforeCanvas}
+          after={afterCanvas}
+          beforeLabel={t('preview.before')}
+          afterLabel={t('preview.after')}
+        />
+      ) : (
+        <div
+          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900"
+          style={{ aspectRatio: String(DEMO_ASPECT_RATIO) }}
+          aria-hidden="true"
+        />
+      )}
     </section>
   );
 }
