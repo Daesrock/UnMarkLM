@@ -91,10 +91,25 @@ export default function FileResults({ files, onDownload, onDownloadAll, onReset 
 
             {/* Download button (when done) */}
             {file.status === 'done' && (
-              <div className="flex items-center">
+              <div className="flex items-center justify-end gap-2">
+                <a
+                  href="https://ko-fi.com/daesrock"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Buy me a coffee on Ko-fi"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium transition-colors"
+                >
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-white/95">
+                    <svg className="w-3.5 h-3.5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M4 7h11a1 1 0 011 1v4a4 4 0 01-4 4H8a4 4 0 01-4-4V8a1 1 0 011-1z" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M16 9h2a2 2 0 010 4h-2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  Buy me a coffee
+                </a>
                 <button
                   onClick={() => onDownload(idx)}
-                  className="ml-auto flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
