@@ -50,6 +50,7 @@ export function KoFiWidget() {
   const [widgetVisible, setWidgetVisible] = useState(false);
   const [officialInitialized, setOfficialInitialized] = useState(false);
   const [fallbackAllowed, setFallbackAllowed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const detectWidget = useCallback(() => {
     const element = document.querySelector(
@@ -60,6 +61,13 @@ export function KoFiWidget() {
   }, []);
 
   const drawWidget = useCallback(() => {
+    if (isMobile) {
+      clearExistingKoFiWidgets();
+      setWidgetVisible(false);
+      setOfficialInitialized(false);
+      return;
+    }
+
     if (!scriptLoaded || !window.kofiWidgetOverlay) {
       return;
     }
@@ -72,7 +80,21 @@ export function KoFiWidget() {
 
     window.setTimeout(detectWidget, 150);
     window.setTimeout(detectWidget, 600);
-  }, [scriptLoaded, theme]);
+  }, [isMobile, scriptLoaded, theme, detectWidget]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
+  }, []);
 
   useEffect(() => {
     drawWidget();
@@ -98,11 +120,11 @@ export function KoFiWidget() {
     };
   }, []);
 
-  const showFallback = fallbackAllowed && (scriptError || (!officialInitialized && !widgetVisible));
+  const showFallback = !isMobile && fallbackAllowed && (scriptError || (!officialInitialized && !widgetVisible));
   const fallbackClassName =
     theme === 'dark'
-      ? 'fixed bottom-4 right-4 z-[9999] inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white text-[#323842] px-5 py-3 text-base font-semibold shadow-lg transition-colors hover:bg-gray-100'
-      : 'fixed bottom-4 right-4 z-[9999] inline-flex items-center gap-2 rounded-full border border-[#323842] bg-[#323842] text-white px-5 py-3 text-base font-semibold shadow-lg transition-colors hover:bg-[#2b313a]';
+      ? 'hidden md:inline-flex fixed bottom-4 right-4 z-[9999] items-center gap-2 rounded-full border border-gray-300 bg-white text-[#323842] px-4 py-2.5 text-sm font-semibold shadow-lg transition-colors hover:bg-gray-100'
+      : 'hidden md:inline-flex fixed bottom-4 right-4 z-[9999] items-center gap-2 rounded-full border border-[#323842] bg-[#323842] text-white px-4 py-2.5 text-sm font-semibold shadow-lg transition-colors hover:bg-[#2b313a]';
 
   return (
     <>
@@ -125,8 +147,8 @@ export function KoFiWidget() {
           aria-label="Buy me a coffee on Ko-fi"
           className={fallbackClassName}
         >
-          <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-white/95">
-            <svg className="w-3.5 h-3.5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <span className="inline-flex items-center justify-center w-4 h-4 rounded bg-white/95">
+            <svg className="w-3 h-3 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M4 7h11a1 1 0 011 1v4a4 4 0 01-4 4H8a4 4 0 01-4-4V8a1 1 0 011-1z" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M16 9h2a2 2 0 010 4h-2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
