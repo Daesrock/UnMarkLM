@@ -331,11 +331,22 @@ function detectContourRegionNearBottomRight(
   const badgeLeftX =
     maxColGrad >= 5 ? hScanLeft + peakColOffset : anchor.x;
 
+  // Sanity check: reject regions that are obviously wrong.
+  // The badge is ~200 px wide; if the detected width is less than 40% of the
+  // anchor width the column scan hit noise rather than a real left edge.
+  const detectedWidth = width - badgeLeftX;
+  const detectedHeight = height - badgeTopY;
+  const minAcceptableWidth = Math.max(30, Math.round(anchor.width * 0.4));
+  const minAcceptableHeight = 8;
+  if (detectedWidth < minAcceptableWidth || detectedHeight < minAcceptableHeight) {
+    return null;
+  }
+
   return {
     x: Math.max(0, badgeLeftX),
     y: Math.max(0, badgeTopY),
-    width: Math.max(1, width - badgeLeftX),
-    height: Math.max(1, height - badgeTopY),
+    width: Math.max(1, detectedWidth),
+    height: Math.max(1, detectedHeight),
   };
 }
 
