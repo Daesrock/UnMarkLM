@@ -78,6 +78,23 @@ export function KoFiWidget() {
     window.kofiWidgetOverlay.draw('daesrock', options);
     setOfficialInitialized(true);
 
+    // Patch iframes injected by the Ko-fi script to remove scrollbars
+    const patchKofiIframes = () => {
+      document
+        .querySelectorAll<HTMLIFrameElement>(
+          '#kofi-widget-overlay iframe, [id^="kofi-widget-overlay"] iframe, .floatingchat-container-wrap iframe',
+        )
+        .forEach((iframe) => {
+          iframe.scrolling = 'no';
+          iframe.style.overflow = 'hidden';
+        });
+    };
+
+    // Patch once immediately and again after a short delay (iframes may not be ready yet)
+    patchKofiIframes();
+    window.setTimeout(patchKofiIframes, 300);
+    window.setTimeout(patchKofiIframes, 800);
+
     window.setTimeout(detectWidget, 150);
     window.setTimeout(detectWidget, 600);
   }, [isMobile, scriptLoaded, theme, detectWidget]);

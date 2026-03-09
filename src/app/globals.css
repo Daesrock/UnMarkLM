@@ -34,19 +34,39 @@ html {
     color 0.2s ease;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Custom scrollbar — applied only to the main document, not to iframes */
+:root ::-webkit-scrollbar {
   width: 8px;
 }
-::-webkit-scrollbar-track {
+:root ::-webkit-scrollbar-track {
   background: transparent;
 }
-::-webkit-scrollbar-thumb {
+:root ::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 4px;
 }
+.dark :root ::-webkit-scrollbar-thumb,
 .dark ::-webkit-scrollbar-thumb {
   background: #374151;
+}
+
+/* Ko-fi floating widget: prevent the button from overflowing or showing scrollbars */
+.floatingchat-container-wrap,
+.floatingchat-container-wrap-mobi,
+#kofi-widget-overlay,
+[id^="kofi-widget-overlay"] {
+  overflow: hidden !important;
+  max-width: none !important;
+}
+.floatingchat-container-wrap iframe,
+#kofi-widget-overlay iframe,
+[id^="kofi-widget-overlay"] iframe {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+}
+.floatingchat-container-wrap iframe::-webkit-scrollbar,
+#kofi-widget-overlay iframe::-webkit-scrollbar {
+  display: none !important;
 }
 
 /* RTL support */
