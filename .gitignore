@@ -16,6 +16,7 @@
 /examples/
 
 # local test/debug artifacts
+/debug-output/
 test_*.png
 test_*.jpg
 test_*.jpeg

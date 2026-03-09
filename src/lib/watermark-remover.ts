@@ -15,6 +15,8 @@
  * Zero external dependencies — pure Canvas API.
  */
 
+import { detectFromRgbaData } from './notebooklm-detector';
+
 export type RemovalMethod = 'smartfill' | 'crop';
 
 export interface WatermarkRegion {
@@ -275,7 +277,13 @@ export function removeWatermark(
   const ctx = canvas.getContext('2d')!;
   ctx.drawImage(imageSource, 0, 0);
 
-  const region = customRegion || detectWatermarkRegion(w, h);
+  let region: WatermarkRegion;
+  if (customRegion) {
+    region = customRegion;
+  } else {
+    const imageData = ctx.getImageData(0, 0, w, h);
+    region = detectFromRgbaData(imageData.data, w, h);
+  }
 
   if (method === 'crop') {
     const cropped = cropWatermark(canvas, region);
