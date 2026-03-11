@@ -27,6 +27,9 @@ export default function Header() {
           <Link href="/faq" className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
             {t('nav.faq')}
           </Link>
+          <Link href="/how-it-works" className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            {t('nav.howItWorks')}
+          </Link>
           <Link href="/privacy" className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
             {t('nav.privacy')}
           </Link>
@@ -133,6 +136,7 @@ export default function Header() {
         <div className="md:hidden bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
           <nav className="flex flex-col p-4 gap-1">
             <Link href="/faq" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">{t('nav.faq')}</Link>
+            <Link href="/how-it-works" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">{t('nav.howItWorks')}</Link>
             <Link href="/privacy" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">{t('nav.privacy')}</Link>
             <Link href="/terms" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">{t('nav.terms')}</Link>
             <Link href="/contact" onClick={() => setMenuOpen(false)} className="px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">{t('nav.contact')}</Link>
