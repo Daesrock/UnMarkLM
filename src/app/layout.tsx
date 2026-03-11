@@ -9,6 +9,8 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const isVercelAppHost = (process.env.VERCEL_URL ?? "").includes("vercel.app");
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://unmarklm.com"),
   title: "UnMarkLM — Remove NotebookLM Watermarks",
@@ -17,17 +19,26 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
+  robots: isVercelAppHost
+    ? {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
+        },
+      }
+    : {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -38,15 +49,16 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   keywords: [
-    "NotebookLM",
-    "watermark remover",
-    "remove watermark",
-    "infographic",
-    "slide deck",
-    "PDF",
-    "free",
-    "open source",
-    "client-side",
+    "NotebookLM watermark remover",
+    "remove NotebookLM watermark",
+    "NotebookLM remover",
+    "how to remove NotebookLM watermark",
+    "NotebookLM watermark",
+    "NotebookLM PDF watermark",
+    "NotebookLM infographic watermark",
+    "free watermark remover",
+    "client-side watermark remover",
+    "UnMarkLM",
   ],
   authors: [{ name: "UnMarkLM" }],
   openGraph: {
@@ -99,11 +111,53 @@ export default function RootLayout({
                 applicationCategory: "MultimediaApplication",
                 operatingSystem: "Web",
                 url: "https://unmarklm.com/",
+                description:
+                  "Free client-side tool to remove the NotebookLM watermark from infographics, PDFs, and slide decks.",
+                featureList:
+                  "Watermark removal, Batch processing, PDF support, PNG support, JPG support, Before/After preview, Dark mode, 13 languages",
                 offers: {
                   "@type": "Offer",
                   price: "0",
                   priceCurrency: "USD",
                 },
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "How do I remove a NotebookLM watermark from a PDF?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Upload your PDF directly to UnMarkLM. The tool automatically detects each page, locates the NotebookLM watermark badge at the bottom-right corner, removes it, and lets you download a clean PDF — all inside your browser with no uploads.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Is UnMarkLM free?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Yes, completely free with no limits. UnMarkLM is open source software.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Are my files uploaded to a server?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "No. All processing happens entirely in your browser using JavaScript. Your files never leave your device.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What file formats does UnMarkLM support?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "UnMarkLM supports PDF files (slide decks), PNG images (infographics), and JPG/JPEG images from NotebookLM.",
+                    },
+                  },
+                ],
               },
             ]),
           }}
