@@ -9,7 +9,8 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const isVercelAppHost = (process.env.VERCEL_URL ?? "").includes("vercel.app");
+// Use VERCEL_ENV to correctly detect environment - 'production' = allow indexing
+const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://unmarklm.com"),
@@ -19,16 +20,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  robots: isVercelAppHost
+  robots: isProduction
     ? {
-        index: false,
-        follow: false,
-        googleBot: {
-          index: false,
-          follow: false,
-        },
-      }
-    : {
         index: true,
         follow: true,
         googleBot: {
@@ -37,6 +30,14 @@ export const metadata: Metadata = {
           "max-image-preview": "large",
           "max-snippet": -1,
           "max-video-preview": -1,
+        },
+      }
+    : {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
         },
       },
   icons: {
